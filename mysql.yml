@@ -1,25 +1,10 @@
-# docker-compose -f mysql.yml up
-# docker pull mysql/mysql-server:latest
+# docker-compose -f mysql.yml up -d
+version: "3.8"
 
-# Setup with root password
-docker run --name mysql-5.7 --env MYSQL_ROOT_PASSWORD=1234 -d mysql:5.7
-docker run --name mysql-5.7 --publish 3306:3306 --env MYSQL_ROOT_PASSWORD=1234 -d mysql:5.7
-
-# create and start container with network
-docker network create mysql-network
-docker run --name mysql-5.7 --network=mysql-network -d mysql:5.7
-
-# control container
-docker start mysql-5.7
-docker stop mysql-5.7
-docker rm mysql-5.7
-
-# reset default mysql
-docker exec -it mysql-5.7 mysql_secure_installation
-
-# login into mysql
-docker exec -it mysql-5.7 mysql -u root -p
-
-# create new user
-CREATE USER 'thienho1'@'0.0.0.0' IDENTIFIED WITH mysql_native_password BY '1234';
-FLUSH PRIVILEGES;
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    restart: always
+    env_file: .env
